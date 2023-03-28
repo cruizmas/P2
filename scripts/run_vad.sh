@@ -1,10 +1,9 @@
 #!/bin/bash
 
 if [ $# != 1 ]; then
-    echo "USAGE: $0 alfa0"
+    echo "Usage: $0 alfa0"
     exit -1
 fi
-
 
 # Be sure that this file has execution permissions:
 # Use the nautilus explorer or chmod +x run_vad.sh

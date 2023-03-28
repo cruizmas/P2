@@ -9,7 +9,11 @@ Options:
    -i FILE, --input-wav=FILE   WAVE file for voice activity detection
    -o FILE, --output-vad=FILE  Label file with the result of VAD
    -w FILE, --output-wav=FILE  WAVE file with silences cleared
+<<<<<<< HEAD
    -0 FILE, --alfa0=FLOAT      Marge sobre P0 per determinar el llindar d'un V/S [default: 5]
+=======
+   -0 FLOAT, --alfa0=FLOAT  Marge sobre p0 per determinar el llindar d'un V/S [default: 5]       
+>>>>>>> d1b1d36bebf561a5529b2e52a21f8dbe9fa57eb3
    -v, --verbose  Show debug information
    -h, --help     Show this screen
    --version      Show the version of the project

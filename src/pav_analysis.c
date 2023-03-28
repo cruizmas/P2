@@ -30,7 +30,6 @@ float compute_zcr(const float *x, unsigned int N, float fm){
 float hamming(unsigned int i, unsigned int N){
     float w = 1e-12;
         w = 0.54-0.46*cos((2*M_PI*i)/(N-1));
-
     return w;
 }
 float compute_power_window(const float *x, unsigned int N, const float *w){
