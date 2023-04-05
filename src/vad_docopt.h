@@ -16,7 +16,7 @@ typedef struct {
     int verbose;
     int version;
     /* options with arguments */
-    char *alfa0;
+    char *alfa0, *alfa1, *alfa2, *alfa3;
     char *input_wav;
     char *output_vad;
     char *output_wav;

@@ -13,7 +13,7 @@ const float FRAME_TIME = 10.0F; /* in ms. */
  */
 
 const char *state_str[] = {
-  "UNDEF", "S", "V", "INIT"
+  "UNDEF", "S", "V", "INIT", "MS", "MV"
 };
 
 const char *state2str(VAD_STATE st) {
@@ -23,7 +23,7 @@ const char *state2str(VAD_STATE st) {
 /* Define a datatype with interesting features */
 typedef struct {
   float zcr;
-  float p;
+  float pow;
   float am;
 } Features;
 
@@ -36,13 +36,11 @@ Features compute_features(const float *x, int N) {
    * Input: x[i] : i=0 .... N-1 
    * Ouput: computed features
    */
-  /* 
-   * DELETE and include a call to your own functions
-   *
-   * For the moment, compute random value between 0 and 1 
-   */
   Features feat;
-  feat.p = compute_power(x,N);
+  feat.pow = compute_power(x,N);
+  feat.zcr = compute_zcr(x,N,16000);
+  feat.am = compute_am(x,N);
+
   return feat;
 }
 
@@ -50,12 +48,15 @@ Features compute_features(const float *x, int N) {
  * TODO: Init the values of vad_data
  */
 
-VAD_DATA * vad_open(float rate, float alfa0) {
+VAD_DATA * vad_open(float rate, float alfa0, float alfa1, float alfa2, float alfa3) {
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
   vad_data->state = ST_INIT;
   vad_data->sampling_rate = rate;
   vad_data->frame_length = rate * FRAME_TIME * 1e-3;
   vad_data->alfa0 = alfa0;
+  vad_data->alfa0 = alfa1;
+  vad_data->alfa0 = alfa2;
+  vad_data->alfa0 = alfa3;
   return vad_data;
 }
 
@@ -88,21 +89,44 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
   Features f = compute_features(x, vad_data->frame_length);
   vad_data->last_feature = f.p; /* save feature, in case you want to show */
 
+  float lgtd;
+  int cont = 0;
+
   switch (vad_data->state) {
   case ST_INIT:
-    vad_data->P0=f.p;
+    vad_data->P0=f.pow;
     vad_data->state = ST_SILENCE;
-    vad_data->P0=f.p;
+    vad_data->P0=f.pow;
     break;
 
   case ST_SILENCE:
-    if (f.p > vad_data->P0 + vad_data->alfa0)
+    if (f.pow > vad_data->umbral1)
+      vad_data->state = ST_MAYBEVOICE;
+    break;
+
+  case ST_MAYBEVOICE:
+    if (f.pow < vad_data->umbral2)
+      vad_data->state = ST_SILENCE;
+    else if(f.pow > vad_data->umbral3)
       vad_data->state = ST_VOICE;
+    else{
+      cont++;
+    }
+    break;
+
+  case ST_MAYBESILENCE:
+    if (f.pow < vad_data->umbral2)
+      vad_data->state = ST_SILENCE;
+    else if(f.pow > vad_data->umbral3)
+      vad_data->state = ST_VOICE;
+    else{
+      cont++;
+    }
     break;
 
   case ST_VOICE:
-    if (f.p < vad_data->P0 + vad_data->alfa0)
-      vad_data->state = ST_SILENCE;
+    if (f.pow < vad_data->umbral1)
+      vad_data->state = ST_MAYBESILENCE;
     break;
 
   case ST_UNDEF:
