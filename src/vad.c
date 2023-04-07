@@ -87,10 +87,10 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
    */
 
   Features f = compute_features(x, vad_data->frame_length);
-  vad_data->last_feature = f.p; /* save feature, in case you want to show */
+  vad_data->last_feature = f.pow; /* save feature, in case you want to show */
 
-  float lgtd;
-  int cont = 0;
+  //float lgtd;
+  //int cont = 0;
 
   switch (vad_data->state) {
   case ST_INIT:
@@ -110,7 +110,7 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
     else if(f.pow > vad_data->umbral3)
       vad_data->state = ST_VOICE;
     else{
-      cont++;
+      //cont++;
     }
     break;
 
@@ -120,7 +120,7 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
     else if(f.pow > vad_data->umbral3)
       vad_data->state = ST_VOICE;
     else{
-      cont++;
+      //cont++;
     }
     break;
 
