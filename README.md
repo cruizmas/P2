@@ -148,10 +148,17 @@ Ejercicios
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para
 	  estar seguros de que un segmento de señal se corresponde con voz.
 	  
+	  El silencio corresponde aproximadamente a 15-20 dB y cuando aparece la señal de voz la potencia sube a unos 50 dB, es decir, 
+	  de silencio a voz incrementa unos 30 dB. Además, hay que tener en cuenta que un sonido sonoro tiene más potencia que un sonido sordo.
 
 	* Duración mínima razonable de los segmentos de voz y silencio.
+	  
+	  La duración mínima de un segmento de voz está en los 0.3 segundos y puede llegar hasta 1.3 segundos.
 
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
+	
+	  Gracias a la tasa de cruces por cero (ZCR) podemos detectar a los sonidos sordos ya que tienen una tasa mucho más elevada 
+	  que los sonoros. También la tasa incrementa cuando hay silencios.
 
 
 ### Desarrollo del detector de actividad vocal
