@@ -48,15 +48,17 @@ Features compute_features(const float *x, int N) {
  * TODO: Init the values of vad_data
  */
 
-VAD_DATA * vad_open(float rate, float alfa0, float alfa1, float alfa2, float alfa3) {
+VAD_DATA * vad_open(float rate, float alfa1, float alfa2, float t_voice, float t_silence) {
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
   vad_data->state = ST_INIT;
   vad_data->sampling_rate = rate;
   vad_data->frame_length = rate * FRAME_TIME * 1e-3;
-  vad_data->alfa0 = alfa0;
-  vad_data->alfa0 = alfa1;
-  vad_data->alfa0 = alfa2;
-  vad_data->alfa0 = alfa3;
+  vad_data->alfa1 = alfa1;
+  vad_data->alfa2 = alfa2;
+  vad_data->t_voice = t_voice;
+  vad_data->t_silence = t_silence;
+  vad_data->mv = 0;
+  vad_data->ms = 0;
   return vad_data;
 }
 
@@ -64,8 +66,9 @@ VAD_STATE vad_close(VAD_DATA *vad_data) {
   /* 
    * TODO: decide what to do with the last undecided frames
    */
-  VAD_STATE state = vad_data->state;
-
+    VAD_STATE state = vad_data->state;
+  if(state == ST_MAYBESILENCE) state = ST_VOICE;
+  if(state == ST_MAYBEVOICE) state = ST_SILENCE;
   free(vad_data);
   return state;
 }
@@ -89,44 +92,49 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
   Features f = compute_features(x, vad_data->frame_length);
   vad_data->last_feature = f.pow; /* save feature, in case you want to show */
 
-  //float lgtd;
-  //int cont = 0;
+  vad_data->k1 = vad_data->k0 + vad_data->alfa1;
+  vad_data->k2 = vad_data->k1 + vad_data->alfa2;
 
   switch (vad_data->state) {
   case ST_INIT:
-    vad_data->P0=f.pow;
     vad_data->state = ST_SILENCE;
-    vad_data->P0=f.pow;
+    vad_data->k0 = f.pow;
+    vad_data->k1 = vad_data->k0 + vad_data->alfa1;
+    vad_data->k2 = vad_data->k1 + vad_data->alfa2;
     break;
 
   case ST_SILENCE:
-    if (f.pow > vad_data->umbral1)
+    if (f.pow > vad_data->k2)
       vad_data->state = ST_MAYBEVOICE;
+      vad_data->mv++;
     break;
 
   case ST_MAYBEVOICE:
-    if (f.pow < vad_data->umbral2)
+    if (f.pow > vad_data->k2)
+      if(vad_data->mv*vad_data->frame_length/vad_data->sampling_rate > vad_data->t_voice)
+        vad_data->state = ST_VOICE;
+      else
+        vad_data->mv++;
+    else if(f.pow < vad_data->k2)
       vad_data->state = ST_SILENCE;
-    else if(f.pow > vad_data->umbral3)
-      vad_data->state = ST_VOICE;
-    else{
-      //cont++;
-    }
+      vad_data->mv = 0;
     break;
 
   case ST_MAYBESILENCE:
-    if (f.pow < vad_data->umbral2)
-      vad_data->state = ST_SILENCE;
-    else if(f.pow > vad_data->umbral3)
+    if (f.pow < vad_data->k1)
+      if(vad_data->mv*vad_data->frame_length/vad_data->sampling_rate > vad_data->t_silence)
+        vad_data->state = ST_SILENCE;
+      else
+        vad_data->ms++;
+    else if(f.pow > vad_data->k1)
       vad_data->state = ST_VOICE;
-    else{
-      //cont++;
-    }
+      vad_data->ms = 0;
     break;
 
   case ST_VOICE:
-    if (f.pow < vad_data->umbral1)
+    if (f.pow < vad_data->k1)
       vad_data->state = ST_MAYBESILENCE;
+      vad_data->ms++;
     break;
 
   case ST_UNDEF:
