@@ -145,7 +145,7 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
       vad_data->state == ST_VOICE)
     return vad_data->state;
   else
-    return ST_UNDEF;
+    return ST_SILENCE;
 }
 
 void vad_show_state(const VAD_DATA *vad_data, FILE *out) {
