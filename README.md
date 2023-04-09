@@ -135,16 +135,30 @@ Ejercicios
 - Etiquete manualmente los segmentos de voz y silencio del fichero grabado al efecto. Inserte, a 
   continuación, una captura de `wavesurfer` en la que se vea con claridad la señal temporal, el contorno de
   potencia y la tasa de cruces por cero, junto con el etiquetado manual de los segmentos.
+  
+  ![Captura de Pantalla 2023-04-05 a las 13 45 22](https://user-images.githubusercontent.com/125216138/230577406-738fe232-97f4-4fe5-aa67-4a1b57841842.png)
+  
+  Podemos observar en la imagen el contorno de la potencia en la parte superior, seguida de la tasa de cruces por cero (ZCR), obtenida con el 
+  código de la primera práctica. El tercer panel representa el etiquetado manual de las secciones de voz y silencio, y finalmente en la parte 
+  inferior tenemos la señal original en el dominio temporal.
 
 
 - A la vista de la gráfica, indique qué valores considera adecuados para las magnitudes siguientes:
 
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para
 	  estar seguros de que un segmento de señal se corresponde con voz.
+	  
+	  El silencio corresponde aproximadamente a 15-20 dB y cuando aparece la señal de voz la potencia sube a unos 50 dB, es decir, 
+	  de silencio a voz incrementa unos 30 dB. Además, hay que tener en cuenta que un sonido sonoro tiene más potencia que un sonido sordo.
 
 	* Duración mínima razonable de los segmentos de voz y silencio.
+	  
+	  La duración mínima de un segmento de voz está en los 0.3 segundos y puede llegar hasta 1.3 segundos.
 
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
+	
+	  Gracias a la tasa de cruces por cero (ZCR) podemos detectar a los sonidos sordos ya que tienen una tasa mucho más elevada 
+	  que los sonoros. También la tasa incrementa cuando hay silencios.
 
 
 ### Desarrollo del detector de actividad vocal
