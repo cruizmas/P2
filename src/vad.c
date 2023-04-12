@@ -68,8 +68,8 @@ VAD_STATE vad_close(VAD_DATA *vad_data) {
    * TODO: decide what to do with the last undecided frames
    */
     VAD_STATE state = vad_data->state;
-  if(state == ST_MAYBESILENCE) state = ST_VOICE;
-  if(state == ST_MAYBEVOICE) state = ST_SILENCE;
+  if(state == ST_MAYBESILENCE) state = ST_SILENCE;
+  if(state == ST_MAYBEVOICE) state = ST_VOICE;
   free(vad_data);
   return state;
 }
