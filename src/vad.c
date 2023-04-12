@@ -48,7 +48,7 @@ Features compute_features(const float *x, int N) {
  * TODO: Init the values of vad_data
  */
 
-VAD_DATA * vad_open(float rate, float alfa1, float alfa2, float t_voice, float t_silence) {
+VAD_DATA * vad_open(float rate, float alfa1, float alfa2, float t_voice, float t_silence, float zcr) {
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
   vad_data->state = ST_INIT;
   vad_data->sampling_rate = rate;
@@ -57,6 +57,7 @@ VAD_DATA * vad_open(float rate, float alfa1, float alfa2, float t_voice, float t
   vad_data->alfa2 = alfa2;
   vad_data->t_voice = t_voice;
   vad_data->t_silence = t_silence;
+  vad_data->zcr = zcr;
   vad_data->mv = 0;
   vad_data->ms = 0;
   return vad_data;
@@ -104,37 +105,44 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
     break;
 
   case ST_SILENCE:
-    if (f.pow > vad_data->k2)
+    if (f.pow > vad_data->k2 && f.zcr){
       vad_data->state = ST_MAYBEVOICE;
       vad_data->mv++;
+    }
     break;
 
   case ST_MAYBEVOICE:
-    if (f.pow > vad_data->k2)
-      if(vad_data->mv*vad_data->frame_length/vad_data->sampling_rate > vad_data->t_voice)
+    if (f.pow > vad_data->k2 && f.zcr){
+      if(vad_data->mv*vad_data->frame_length/vad_data->sampling_rate > vad_data->t_voice){
         vad_data->state = ST_VOICE;
-      else
+        vad_data->mv = 0;
+      }else{
         vad_data->mv++;
-    else if(f.pow < vad_data->k2)
+      }
+    }else{
       vad_data->state = ST_SILENCE;
-      vad_data->mv = 0;
+      vad_data->ms = 0;
+    }
     break;
 
   case ST_MAYBESILENCE:
-    if (f.pow < vad_data->k1)
-      if(vad_data->mv*vad_data->frame_length/vad_data->sampling_rate > vad_data->t_silence)
+    if (f.pow < vad_data->k1 && f.zcr > vad_data->zcr){
+      if(vad_data->ms*vad_data->frame_length/vad_data->sampling_rate > vad_data->t_silence){
         vad_data->state = ST_SILENCE;
-      else
+        vad_data->ms = 0;
+      }else
         vad_data->ms++;
-    else if(f.pow > vad_data->k1)
+    }else{
       vad_data->state = ST_VOICE;
-      vad_data->ms = 0;
+      vad_data->mv = 0;
+    }
     break;
 
   case ST_VOICE:
-    if (f.pow < vad_data->k1)
+    if (f.pow < vad_data->k1 && f.zcr > vad_data->zcr){
       vad_data->state = ST_MAYBESILENCE;
       vad_data->ms++;
+    }
     break;
 
   case ST_UNDEF:
@@ -142,10 +150,11 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
   }
 
   if (vad_data->state == ST_SILENCE ||
-      vad_data->state == ST_VOICE)
+      vad_data->state == ST_VOICE){
     return vad_data->state;
-  else
-    return ST_SILENCE;
+  }else{
+    return ST_UNDEF;
+  }
 }
 
 void vad_show_state(const VAD_DATA *vad_data, FILE *out) {

@@ -13,6 +13,7 @@ Options:
    -2 FILE, --alfa2=FLOAT      Marge sobre P0 per determinar el llindar d'un V/S [default: 5]\n"
    -V FILE, --t_voice=FLOAT      Marge sobre P0 per determinar el llindar d'un V/S [default: 5]\n"
    -S FILE, --t_silence=FLOAT      Marge sobre P0 per determinar el llindar d'un V/S [default: 5]\n"
+   -z FILE, --zcr=FLOAT        LLindar ZCR
    -v, --verbose  Show debug information
    -h, --help     Show this screen
    --version      Show the version of the project

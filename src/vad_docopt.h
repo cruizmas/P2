@@ -23,6 +23,7 @@ typedef struct {
     char *output_wav;
     char *t_silence;
     char *t_voice;
+    char *zcr;
     /* special */
     const char *usage_pattern;
     const char *help_message;
@@ -44,6 +45,7 @@ const char help_message[] =
 "   -2 FILE, --alfa2=FLOAT      Marge sobre P0 per determinar el llindar d'un V/S [default: 5]\\n\"\n"
 "   -V FILE, --t_voice=FLOAT      Marge sobre P0 per determinar el llindar d'un V/S [default: 5]\\n\"\n"
 "   -S FILE, --t_silence=FLOAT      Marge sobre P0 per determinar el llindar d'un V/S [default: 5]\\n\"\n"
+"   -z FILE, --zcr=FLOAT        LLindar ZCR\n"
 "   -v, --verbose  Show debug information\n"
 "   -h, --help     Show this screen\n"
 "   --version      Show the version of the project\n"
@@ -299,6 +301,9 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
         } else if (!strcmp(option->olong, "--t_voice")) {
             if (option->argument)
                 args->t_voice = option->argument;
+        } else if (!strcmp(option->olong, "--zcr")) {
+            if (option->argument)
+                args->zcr = option->argument;
         }
     }
     /* commands */
@@ -320,7 +325,7 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
 DocoptArgs docopt(int argc, char *argv[], bool help, const char *version) {
     DocoptArgs args = {
         0, 0, 0, (char*) "5", (char*) "5", NULL, NULL, NULL, (char*) "5",
-        (char*) "5",
+        (char*) "5", NULL,
         usage_pattern, help_message
     };
     Tokens ts;
@@ -338,9 +343,10 @@ DocoptArgs docopt(int argc, char *argv[], bool help, const char *version) {
         {"-o", "--output-vad", 1, 0, NULL},
         {"-w", "--output-wav", 1, 0, NULL},
         {"-S", "--t_silence", 1, 0, NULL},
-        {"-V", "--t_voice", 1, 0, NULL}
+        {"-V", "--t_voice", 1, 0, NULL},
+        {"-z", "--zcr", 1, 0, NULL}
     };
-    Elements elements = {0, 0, 10, commands, arguments, options};
+    Elements elements = {0, 0, 11, commands, arguments, options};
 
     ts = tokens_new(argc, argv);
     if (parse_args(&ts, &elements))

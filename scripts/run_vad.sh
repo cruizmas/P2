@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -ne 4 ]; then
+if [ $# -ne 5 ]; then
     echo "Usage: $0 missing parameters"
     exit -1
 fi
@@ -8,6 +8,7 @@ fi
     alfa2=$2
     t_voice=$3
     t_silence=$4
+    zcr=$5
 
 # Be sure that this file has execution permissions:
 # Use the nautilus explorer or chmod +x run_vad.sh
@@ -15,7 +16,7 @@ fi
 # Write here the name and path of your program and database
 DIR_P2=$HOME/PAV/P2
 DB=$DIR_P2/db.v4
-CMD="$DIR_P2/bin/vad --alfa1=$alfa1 --alfa2=$alfa2 --t_voice=$t_voice --t_silence=$t_silence"
+CMD="$DIR_P2/bin/vad --alfa1=$alfa1 --alfa2=$alfa2 --t_voice=$t_voice --t_silence=$t_silence --zcr=$zcr"
 
 for filewav in $DB/*/*wav; do
 #    echo
