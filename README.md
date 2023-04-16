@@ -168,6 +168,8 @@ Ejercicios
 
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
+  
+  <img width="1280" alt="Captura de Pantalla 2023-04-16 a las 13 37 12" src="https://user-images.githubusercontent.com/125216138/232307646-f5f9d197-8b50-4e6f-9232-deafd5a44126.png">
 
 - Explique, si existen. las discrepancias entre el etiquetado manual y la detección automática.
 
