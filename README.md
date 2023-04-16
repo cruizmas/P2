@@ -136,9 +136,9 @@ Ejercicios
   continuación, una captura de `wavesurfer` en la que se vea con claridad la señal temporal, el contorno de
   potencia y la tasa de cruces por cero, junto con el etiquetado manual de los segmentos.
   
-  ![Captura de Pantalla 2023-04-05 a las 13 45 22](https://user-images.githubusercontent.com/125216138/230577406-738fe232-97f4-4fe5-aa67-4a1b57841842.png)
-  
-  Podemos observar en la imagen el contorno de la potencia en la parte superior, seguida de la tasa de cruces por cero (ZCR), obtenida con el 
+  >![Captura de Pantalla 2023-04-05 a las 13 45 22](https://user-images.githubusercontent.com/125216138/230577406-738fe232-97f4-4fe5-aa67-4a1b57841842.png)
+  >
+  >Podemos observar en la imagen el contorno de la potencia en la parte superior, seguida de la tasa de cruces por cero (ZCR), obtenida con el 
   código de la primera práctica. El tercer panel representa el etiquetado manual de las secciones de voz y silencio, y finalmente en la parte 
   inferior tenemos la señal original en el dominio temporal.
 
@@ -148,16 +148,15 @@ Ejercicios
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para
 	  estar seguros de que un segmento de señal se corresponde con voz.
 	  
-	  El silencio corresponde aproximadamente a 15-20 dB y cuando aparece la señal de voz la potencia sube a unos 50 dB, es decir, 
-	  de silencio a voz incrementa unos 30 dB. Además, hay que tener en cuenta que un sonido sonoro tiene más potencia que un sonido sordo.
+	  >Hemos utilizado el audio Nueva-grabación-2.wav. El silencio corresponde aproximadamente a 15-20 dB y cuando aparece la señal de voz la potencia sube a unos 50 dB, es decir, de silencio a voz incrementa unos 30 dB. Además, hay que tener en cuenta que un sonido sonoro tiene más potencia que un sonido sordo.
 
 	* Duración mínima razonable de los segmentos de voz y silencio.
 	  
-	  La duración mínima de un segmento de voz está en los 0.3 segundos y puede llegar hasta 1.3 segundos.
+	  >Los segmentos de voz suelen ser variables, dependiendo de las frases o palabras que se pronuncien. En nuestra grabación, la duración mínima de un segmento de voz está en los 0.3 segundos y puede llegar hasta 1.3 segundos. Los segmentos de silencio pueden durar de 0.5 segundos hasta 1 segundo.
 
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
 	
-	  Gracias a la tasa de cruces por cero (ZCR) podemos detectar a los sonidos sordos ya que tienen una tasa mucho más elevada 
+	  >Gracias a la tasa de cruces por cero (ZCR) podemos detectar a los sonidos sordos ya que tienen una tasa mucho más elevada 
 	  que los sonoros. También la tasa incrementa cuando hay silencios.
 
 
@@ -166,16 +165,42 @@ Ejercicios
 - Complete el código de los ficheros de la práctica para implementar un detector de actividad vocal en
   tiempo real tan exacto como sea posible. Tome como objetivo la maximización de la puntuación-F `TOTAL`.
 
+  >A partir de ahora, para el resto de la práctica, el fichero de audio que hemos utilizado es el de prueb.wav.
+  >
+  >Despues de probar varios valores para los parámetros, hemos llegado a la conclusión de que obteníamos resultados más precisos con los siguientes:
+  ```
+  alpha1 = 7.5
+  alpha2 = 3.5
+  t_voice = 0
+  t_silence = 0.12
+  zcr_v = 3800
+  zcr_s = 3400
+  ```
+  
+  >Tras completar el código implementando los cuatro estados y con los parámetros mencionados anteriormente, hemos conseguido una precisión de 92.876% y en el conjunto de señales de la base de datos un F-score de 93.012%. 
+  >
+  >Lo podemos comprobar en las siguientes capturas de la ejecución del programa:
+  >
+  >![WhatsApp Image 2023-04-16 at 19 35 39](https://user-images.githubusercontent.com/125216138/232331773-9b367b96-0b91-4f55-88b1-630688fd19c7.jpeg)
+  >
+  >![WhatsApp Image 2023-04-16 at 19 35 38](https://user-images.githubusercontent.com/125216138/232331779-254846d6-87f5-4bc6-b413-2578927b9477.jpeg)
+
+
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
   
-  <img width="1280" alt="Captura de Pantalla 2023-04-16 a las 13 37 12" src="https://user-images.githubusercontent.com/125216138/232307646-f5f9d197-8b50-4e6f-9232-deafd5a44126.png">
+  >![Captura de Pantalla 2023-04-16 a las 20 42 25](https://user-images.githubusercontent.com/125216138/232334668-a05efcbb-becd-45c3-86fe-86ac773dcbf7.png)
 
 - Explique, si existen. las discrepancias entre el etiquetado manual y la detección automática.
+
+  > Como podemos observar en la imagen de la pregunta anterior, hay una pequeña diferencia entre el etiquetado manual y la detección automática. En la detección automática clasifica una trama como silencio y otra pequeña trama como voz, a diferencia del etiquetado manual donde los incluimos en una única trama. A pesar de esto, la detección automática es muy acertada.
 
 - Evalúe los resultados sobre la base de datos `db.v4` con el script `vad_evaluation.pl` e inserte a 
   continuación las tasas de sensibilidad (*recall*) y precisión para el conjunto de la base de datos (sólo
   el resumen).
+  >Como hemos comentado en el primer ejercicio, el mejor resultado que hemos conseguido ha sido el siguiente: 
+  >
+  >![WhatsApp Image 2023-04-16 at 19 35 38](https://user-images.githubusercontent.com/125216138/232331779-254846d6-87f5-4bc6-b413-2578927b9477.jpeg)
 
 
 ### Trabajos de ampliación
@@ -186,13 +211,39 @@ Ejercicios
   la que se vea con claridad la señal antes y después de la cancelación (puede que `wavesurfer` no sea la
   mejor opción para esto, ya que no es capaz de visualizar varias señales al mismo tiempo).
   
-  <img width="49%" alt="WhatsApp Image 2023-04-16 at 18 28 52" src=https://user-images.githubusercontent.com/125216138/232327099-b451a970-5d81-4c19-bb1d-17b0ef7f3c9d.jpeg>  <img width="49%" alt="WhatsApp Image 2023-04-16 at 18 28 52 (1)" src=https://user-images.githubusercontent.com/125216138/232327106-94d40d0a-c207-43ba-8f12-b18c9fc9771b.jpeg>
+  >A continuación encontramos la señal original y la señal después de la cancelación:
+  >
+  ><img width="49%" alt="WhatsApp Image 2023-04-16 at 18 28 52" src=https://user-images.githubusercontent.com/125216138/232327099-b451a970-5d81-4c19-bb1d-17b0ef7f3c9d.jpeg>  <img width="49%" alt="WhatsApp Image 2023-04-16 at 18 28 52 (1)" src=https://user-images.githubusercontent.com/125216138/232327106-94d40d0a-c207-43ba-8f12-b18c9fc9771b.jpeg>
+  >
+  > Observando las dos gráficas, podemos concluir que funciona perfectamente ya que la señal de voz ha sido perfectamente modificada para añadir ceros en las tramas detectadas como silencios
 
 #### Gestión de las opciones del programa usando `docopt_c`
 
 - Si ha usado `docopt_c` para realizar la gestión de las opciones y argumentos del programa `vad`, inserte
   una captura de pantalla en la que se vea el mensaje de ayuda del programa.
+  
+  ```
+  VAD - Voice Activity Detector
 
+  Usage:
+     vad [options] -i <input-wav> -o <output-vad> [-w <output-wav>]
+     vad (-h | --help)
+     vad --version
+
+  Options:
+     -i FILE, --input-wav=FILE   WAVE file for voice activity detection
+     -o FILE, --output-vad=FILE  Label file with the result of VAD
+     -w FILE, --output-wav=FILE  WAVE file with silences cleared
+     -1 FILE, --alfa1=FLOAT      Marge sobre k0 per determinar el llindar d'un V/S [default: 7.5]
+     -2 FILE, --alfa2=FLOAT      Marge sobre P1 per determinar el llindar d'un V/S [default: 3.5]
+     -V FILE, --t_voice=FLOAT    Temps mínim per considerar veu [default: 0]
+     -S FILE, --t_silence=FLOAT  Temps mínim per considerar vsilencia [default: 0.12]
+     -zs FILE, --zcr_s=FLOAT        LLindar ZCR silenci [default: 3400]
+     -zv FILE, --zcr_v=FLOAT        LLindar ZCR veu [default: 3800]
+     -v, --verbose  Show debug information
+     -h, --help     Show this screen
+     --version      Show the version of the project
+  ```
 
 ### Contribuciones adicionales y/o comentarios acerca de la práctica
 
