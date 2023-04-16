@@ -42,12 +42,12 @@ const char help_message[] =
 "   -i FILE, --input-wav=FILE   WAVE file for voice activity detection\n"
 "   -o FILE, --output-vad=FILE  Label file with the result of VAD\n"
 "   -w FILE, --output-wav=FILE  WAVE file with silences cleared\n"
-"   -1 FILE, --alfa1=FLOAT      Marge sobre k0 per determinar el llindar d'un V/S [default: 6.8]\n"
-"   -2 FILE, --alfa2=FLOAT      Marge sobre P1 per determinar el llindar d'un V/S [default: 3.2]\n"
+"   -1 FILE, --alfa1=FLOAT      Marge sobre k0 per determinar el llindar d'un V/S [default: 7.5]\n"
+"   -2 FILE, --alfa2=FLOAT      Marge sobre P1 per determinar el llindar d'un V/S [default: 3.5]\n"
 "   -V FILE, --t_voice=FLOAT    Temps mínim per considerar veu [default: 0]\n"
-"   -S FILE, --t_silence=FLOAT  Temps mínim per considerar vsilencia [default: 0.15]\n"
+"   -S FILE, --t_silence=FLOAT  Temps mínim per considerar vsilencia [default: 0.12]\n"
 "   -zs FILE, --zcr_s=FLOAT        LLindar ZCR silenci [default: 3400]\n"
-"   -zv FILE, --zcr_v=FLOAT        LLindar ZCR veu [default: 3600]\n"
+"   -zv FILE, --zcr_v=FLOAT        LLindar ZCR veu [default: 3800]\n"
 "   -v, --verbose  Show debug information\n"
 "   -h, --help     Show this screen\n"
 "   --version      Show the version of the project\n"
@@ -329,8 +329,8 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
 
 DocoptArgs docopt(int argc, char *argv[], bool help, const char *version) {
     DocoptArgs args = {
-        0, 0, 0, (char*) "6.8", (char*) "3.2", NULL, NULL, NULL, (char*) "0.15",
-        (char*) "0", (char*) "3400", (char*) "3600",
+        0, 0, 0, (char*) "7.5", (char*) "3.5", NULL, NULL, NULL, (char*) "0.12",
+        (char*) "0", (char*) "3400", (char*) "3800",
         usage_pattern, help_message
     };
     Tokens ts;
