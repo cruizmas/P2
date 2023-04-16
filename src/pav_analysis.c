@@ -18,10 +18,15 @@ float compute_am(const float *x, unsigned int N) {
     return am/N;
 }
 float compute_zcr(const float *x, unsigned int N, float fm){
-    float zcr = 0;
-    for(unsigned int n=1; n<N; n++){
+    float zcr = 1e-12;
+    /*for(unsigned int n=1; n<N; n++){
         if(signo(x[n])!=signo(x[n-1])){
             zcr ++;
+        }
+    }*/
+    for(unsigned int i=0; i<N-1; i++){
+        if((x[i]>=0 && x[i+1]<0) || (x[i]<0 && x[i+1]>=0)){
+            zcr++;
         }
     }
     return fm/(2*(N-1))*zcr; 

@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
   int frame_size;         /* in samples */
   float frame_duration;   /* in seconds */
   unsigned int t, last_t; /* in frames */
-  float alfa1, alfa2, t_voice, t_silence, zcr;
+  float alfa1, alfa2, t_voice, t_silence, zcr_s, zcr_v;
 
   char	*input_wav, *output_vad, *output_wav;
 
@@ -37,7 +37,8 @@ int main(int argc, char *argv[]) {
   alfa2 = atof(args.alfa2);
   t_voice = atof(args.t_voice);
   t_silence = atof(args.t_silence);
-  zcr = atof(args.zcr);
+  zcr_s = atof(args.zcr_s);
+  zcr_v = atof(args.zcr_s);
 
   if (input_wav == 0 || output_vad == 0) {
     fprintf(stderr, "%s\n", args.usage_pattern);
@@ -69,7 +70,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  vad_data = vad_open(sf_info.samplerate, alfa1, alfa2, t_voice, t_silence, zcr);
+  vad_data = vad_open(sf_info.samplerate, alfa1, alfa2, t_voice, t_silence, zcr_s, zcr_v);
   /* Allocate memory for buffers */
   frame_size   = vad_frame_size(vad_data);
   buffer       = (float *) malloc(frame_size * sizeof(float));
@@ -85,6 +86,7 @@ int main(int argc, char *argv[]) {
 
     if (sndfile_out != 0) {
       /* TODO: copy all the samples into sndfile_out */
+      //sf_write_float(sndfile_out, buffer, frame_size);
     }
 
     state = vad(vad_data, buffer);
@@ -99,8 +101,10 @@ int main(int argc, char *argv[]) {
       last_t = t;
     }
 
-    if (sndfile_out != 0) {
+    if (sndfile_out != 0 && state == ST_SILENCE) {
       /* TODO: go back and write zeros in silence segments */
+      //sf_seek(sndfile_out, -frame_size, SEEK_CUR);
+      //sf_write_float(sndfile_out, buffer_zeros, frame_size);
     }
   }
 

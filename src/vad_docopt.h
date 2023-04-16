@@ -23,7 +23,8 @@ typedef struct {
     char *output_wav;
     char *t_silence;
     char *t_voice;
-    char *zcr;
+    char *zcr_s;
+    char *zcr_v;
     /* special */
     const char *usage_pattern;
     const char *help_message;
@@ -45,7 +46,8 @@ const char help_message[] =
 "   -2 FILE, --alfa2=FLOAT      Marge sobre P1 per determinar el llindar d'un V/S [default: 3.2]\n"
 "   -V FILE, --t_voice=FLOAT    Temps mínim per considerar veu [default: 0]\n"
 "   -S FILE, --t_silence=FLOAT  Temps mínim per considerar vsilencia [default: 0.15]\n"
-"   -z FILE, --zcr=FLOAT        LLindar ZCR [default: 3600]\n"
+"   -zs FILE, --zcr_s=FLOAT        LLindar ZCR silenci [default: 3400]\n"
+"   -zv FILE, --zcr_v=FLOAT        LLindar ZCR veu [default: 3600]\n"
 "   -v, --verbose  Show debug information\n"
 "   -h, --help     Show this screen\n"
 "   --version      Show the version of the project\n"
@@ -301,9 +303,12 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
         } else if (!strcmp(option->olong, "--t_voice")) {
             if (option->argument)
                 args->t_voice = option->argument;
-        } else if (!strcmp(option->olong, "--zcr")) {
+        } else if (!strcmp(option->olong, "--zcr_s")) {
             if (option->argument)
-                args->zcr = option->argument;
+                args->zcr_s = option->argument;
+        } else if (!strcmp(option->olong, "--zcr_v")) {
+            if (option->argument)
+                args->zcr_v = option->argument;
         }
     }
     /* commands */
@@ -325,7 +330,7 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
 DocoptArgs docopt(int argc, char *argv[], bool help, const char *version) {
     DocoptArgs args = {
         0, 0, 0, (char*) "6.8", (char*) "3.2", NULL, NULL, NULL, (char*) "0.15",
-        (char*) "0", (char*) "3600",
+        (char*) "0", (char*) "3400", (char*) "3600",
         usage_pattern, help_message
     };
     Tokens ts;
@@ -344,9 +349,10 @@ DocoptArgs docopt(int argc, char *argv[], bool help, const char *version) {
         {"-w", "--output-wav", 1, 0, NULL},
         {"-S", "--t_silence", 1, 0, NULL},
         {"-V", "--t_voice", 1, 0, NULL},
-        {"-z", "--zcr", 1, 0, NULL}
+        {"-zs", "--zcr_s", 1, 0, NULL},
+        {"-zv", "--zcr_v", 1, 0, NULL}
     };
-    Elements elements = {0, 0, 11, commands, arguments, options};
+    Elements elements = {0, 0, 12, commands, arguments, options};
 
     ts = tokens_new(argc, argv);
     if (parse_args(&ts, &elements))
