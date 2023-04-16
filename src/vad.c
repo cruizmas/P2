@@ -68,8 +68,8 @@ VAD_STATE vad_close(VAD_DATA *vad_data) {
    * TODO: decide what to do with the last undecided frames
    */
     VAD_STATE state = vad_data->state;
-  if(state == ST_MAYBESILENCE) state = ST_SILENCE;
-  if(state == ST_MAYBEVOICE) state = ST_VOICE;
+  if(state == ST_MAYBESILENCE) state = ST_VOICE;
+  if(state == ST_MAYBEVOICE) state = ST_SILENCE;
   free(vad_data);
   return state;
 }
@@ -105,41 +105,41 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
     break;
 
   case ST_SILENCE:
-    if (f.pow > vad_data->k2 && f.zcr){
+    if (f.pow > vad_data->k2 || f.zcr > vad_data->zcr){
       vad_data->state = ST_MAYBEVOICE;
       vad_data->mv++;
     }
     break;
 
   case ST_MAYBEVOICE:
-    if (f.pow > vad_data->k2 && f.zcr){
+    if (f.pow > vad_data->k2 || f.zcr > vad_data->zcr){
       if(vad_data->mv*vad_data->frame_length/vad_data->sampling_rate > vad_data->t_voice){
         vad_data->state = ST_VOICE;
         vad_data->mv = 0;
       }else{
         vad_data->mv++;
       }
-    }else{
+    }else if(f.pow < vad_data->k1){
       vad_data->state = ST_SILENCE;
       vad_data->ms = 0;
     }
     break;
 
   case ST_MAYBESILENCE:
-    if (f.pow < vad_data->k1 && f.zcr > vad_data->zcr){
+    if (f.pow < vad_data->k1 && f.zcr < vad_data->zcr){
       if(vad_data->ms*vad_data->frame_length/vad_data->sampling_rate > vad_data->t_silence){
         vad_data->state = ST_SILENCE;
         vad_data->ms = 0;
       }else
         vad_data->ms++;
-    }else{
+    }else if (f.pow > vad_data->k2){
       vad_data->state = ST_VOICE;
       vad_data->mv = 0;
     }
     break;
 
   case ST_VOICE:
-    if (f.pow < vad_data->k1 && f.zcr > vad_data->zcr){
+    if (f.pow < vad_data->k1 && f.zcr < vad_data->zcr){
       vad_data->state = ST_MAYBESILENCE;
       vad_data->ms++;
     }
