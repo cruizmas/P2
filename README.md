@@ -168,6 +168,8 @@ Ejercicios
 
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
+  
+  <img width="1280" alt="Captura de Pantalla 2023-04-16 a las 13 37 12" src="https://user-images.githubusercontent.com/125216138/232307646-f5f9d197-8b50-4e6f-9232-deafd5a44126.png">
 
 - Explique, si existen. las discrepancias entre el etiquetado manual y la detección automática.
 
@@ -183,6 +185,8 @@ Ejercicios
 - Si ha desarrollado el algoritmo para la cancelación de los segmentos de silencio, inserte una gráfica en
   la que se vea con claridad la señal antes y después de la cancelación (puede que `wavesurfer` no sea la
   mejor opción para esto, ya que no es capaz de visualizar varias señales al mismo tiempo).
+  
+  <img width="49%" alt="WhatsApp Image 2023-04-16 at 18 28 52" src=https://user-images.githubusercontent.com/125216138/232327099-b451a970-5d81-4c19-bb1d-17b0ef7f3c9d.jpeg>  <img width="49%" alt="WhatsApp Image 2023-04-16 at 18 28 52 (1)" src=https://user-images.githubusercontent.com/125216138/232327106-94d40d0a-c207-43ba-8f12-b18c9fc9771b.jpeg>
 
 #### Gestión de las opciones del programa usando `docopt_c`
 
