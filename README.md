@@ -176,6 +176,10 @@ Ejercicios
 - Evalúe los resultados sobre la base de datos `db.v4` con el script `vad_evaluation.pl` e inserte a 
   continuación las tasas de sensibilidad (*recall*) y precisión para el conjunto de la base de datos (sólo
   el resumen).
+  
+![WhatsApp Image 2023-04-16 at 18 28 52](https://user-images.githubusercontent.com/125216138/232327099-b451a970-5d81-4c19-bb1d-17b0ef7f3c9d.jpeg)
+![WhatsApp Image 2023-04-16 at 18 28 52 (1)](https://user-images.githubusercontent.com/125216138/232327106-94d40d0a-c207-43ba-8f12-b18c9fc9771b.jpeg)
+
 
 
 ### Trabajos de ampliación
